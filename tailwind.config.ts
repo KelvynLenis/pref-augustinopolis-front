@@ -19,8 +19,14 @@ const config = {
     },
     extend: {
       backgroundImage: {
-        login: "url('/bg.png')",
+        login: "url('/bg-login.png')",
+        menu: "url('/bg-2.png')",
       },
+      colors: {
+        "login-green": "#4AAAA5",
+        "header-purple": "#727CF5",
+        header: "#35404F"
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],
