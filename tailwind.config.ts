@@ -25,7 +25,10 @@ const config = {
       colors: {
         "login-green": "#4AAAA5",
         "header-purple": "#727CF5",
-        header: "#35404F"
+        header: "#35404F",
+        tab: "#EEEEEE",
+        "light": "#5C5C5C",
+        "strong": "#181818"
       }
     },
   },

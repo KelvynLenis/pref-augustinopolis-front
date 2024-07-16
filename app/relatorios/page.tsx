@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {  ArrowLeft, PenSquare, Printer, Search, Triangle } from "lucide-react";
+import { PenSquare, Search, Triangle } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -8,15 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import Word from '../../assets/icons/word.svg'
-import Pdf from '../../assets/icons/pdf.svg'
 import PrinterLogo from '../../assets/icons/printer.svg'
 import Image from "next/image";
+import { ConfigButtons } from "@/components/ConfigButtons";
 
 export default function Relatories() {
   return (
-    <div className="px-5 py-10 text-header gap-4 flex flex-col">
-      <header className="w-full bg-header-purple py-6 px-4 rounded-sm text-white flex justify-between">
+    <div className="px-5 py-5 text-header gap-5 flex flex-col">
+      <header className=" bg-header-purple py-5 px-4 rounded-sm text-white text-xs w-full flex justify-between">
         <span>FUNDO MUNICIPAL DE MEIO AMBIENTE</span>
         <span>Usuário: augustinopolis</span>
       </header>
@@ -36,30 +35,9 @@ export default function Relatories() {
               Filtro dinâmico
             </span>
           </Button>
-        </div>
+        </div>    
 
-        <div className="flex gap-4">
-          <Button className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:bg-slate-200">
-            <Image src={Word} alt="word logo" className="h-6 w-6" />
-            Word
-          </Button>
-
-          <Button className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:bg-slate-200">
-            <Image src={Pdf} alt="PDF logo" className="h-6 w-6" />
-            PDF
-          </Button>
-
-          <Button className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:bg-slate-200">
-            <Printer className="h-6 w-6" />
-            Imprimir
-          </Button>
-
-          <Button className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:bg-slate-200">
-            <ArrowLeft className="h-6 w-6" />
-            Voltar
-          </Button>
-
-        </div>
+        <ConfigButtons />    
       </div>
 
       {/* table */}
