@@ -6,33 +6,35 @@ import Image from "next/image";
 import Word from '../assets/icons/word.svg'
 import Pdf from '../assets/icons/pdf.svg'
 import { ArrowLeft, Printer, Check, X } from "lucide-react";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { useDragAndDrop } from "@formkit/drag-and-drop/react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-
-
+import { twMerge } from "tailwind-merge";
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 
 export function ConfigButtons() {
-  const [isWordConfigPanelOpen, setIsWordConfigPanelOpen] = useState(false)
-  const [isPDFConfigPanelOpen, setIsPDFConfigPanelOpen] = useState(false)
-  const [isPrintConfigPanelOpen, setIsPrintConfigPanelOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<"configuration" | "columns">("configuration")
+  const availableFields = ["Id imposto", "Id CNAE", "Tbusuario Orgao Idusuario", "Tbusuario Idfornecedor", "Tbusuario Principal Idorgao Principal"]
+  const selectedFields = ["Pago", "CNPJ Fornecedor", "Nome Fornecedor", "Data Emissão", "Numero Nota", "Valor Nota", "Aliq Retenção", "Valor Retenção", "Imprimir"]
+
+  const [availableList, availables] = useDragAndDrop<HTMLUListElement, string>(
+    availableFields,
+    {
+      group: "availableList",
+      sortable: false
+    }
+  )
+
+  const [selectedList, selects] = useDragAndDrop<HTMLUListElement, string>(
+    selectedFields,
+    {
+      group: "selectedList",
+      sortable: false
+    }
+  )
 
   return (
     <>
@@ -44,12 +46,16 @@ export function ConfigButtons() {
               Word
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-white h-[540px]">
-            <Tabs defaultValue="configuration" className="w-full">
+          <DialogContent className="bg-white h-[35rem]">
+            <Tabs defaultValue={activeTab} className="w-full">
+
               <TabsList className="grid w-full grid-cols-2 gap-1">
-                <TabsTrigger value="configuration" className="bg-zinc-100 px-2 text-strong">Configurações de Exportação</TabsTrigger>
-                <TabsTrigger value="columns" className="bg-tab text-light">Selecionar colunas</TabsTrigger>
+                <TabsTrigger value="configuration" onClick={() => setActiveTab("configuration")} className={twMerge("px-2", activeTab === 'configuration' ? 'text-strong bg-zinc-100' : 'bg-tab text-light')}>
+                  Configurações de Exportação
+                </TabsTrigger>
+                <TabsTrigger value="columns" onClick={() => setActiveTab("columns")} className={twMerge("px-2", activeTab === 'columns' ? 'text-strong bg-zinc-100' : 'bg-tab text-light')}>Selecionar colunas</TabsTrigger>
               </TabsList>
+
               <TabsContent value="configuration">
 
                 <Card>
@@ -74,17 +80,22 @@ export function ConfigButtons() {
 
                 {/* drag n' drop formkit     */}
                 <Card className="flex">
-                  <CardContent className="w-full h-full py-2 border-none flex">
-                    <div className="w-1/2 h-64 border border-strong outline-dotted border-dotted py-1 px-2 flex flex-col gap-2">
-                      <span className="text-light bg-zinc-100 w-full p-1 h-fit">Id Imposto</span>
-                      <span className="text-light bg-zinc-100 w-full p-1 h-fit">Id Imposto</span>
-                      <span className="text-light bg-zinc-100 w-full p-1 h-fit">Id Imposto</span>
-                      <span className="text-light bg-zinc-100 w-full p-1 h-fit">Id Imposto</span>
-                    </div>
+                  <CardContent className="w-full h-[27rem] py-2 border-none flex gap-5">
+                    <ul ref={availableList} className="w-1/2 h-full border border-strong outline-dotted border-dotted py-1 px-2 flex flex-col gap-2 select-none">
+                    {
+                      availables.map((item) => (
+                        <li key={item} className="text-light bg-zinc-100 w-full p-1 h-fit hover:cursor-grab kanban-item">{item}</li>
+                      ))
+                    }
+                    </ul>
 
-                    <div>
-
-                    </div>
+                    <ul ref={selectedList} className="w-1/2 h-full border border-strong outline-dotted border-dotted py-1 px-2 flex flex-col gap-2">
+                    {
+                      selects.map((item) => (
+                        <li key={item} className="text-light bg-zinc-100 w-full p-1 h-fit kanban-item">{item}</li>
+                      ))
+                    }
+                    </ul>
                   </CardContent>
                 </Card>
               </TabsContent>
