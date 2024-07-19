@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { twMerge } from "tailwind-merge";
-import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+import DragDrop from "./DragDrop";
 
 export function ConfigButtons() {
   const [activeTab, setActiveTab] = useState<"configuration" | "columns">("configuration")
@@ -35,6 +35,10 @@ export function ConfigButtons() {
       sortable: false
     }
   )
+
+  const onDragEnd = () => {
+    console.log('drag end')
+  }
 
   return (
     <>
@@ -78,24 +82,10 @@ export function ConfigButtons() {
 
               <TabsContent value="columns">
 
-                {/* drag n' drop formkit     */}
+                {/* drag n' drop    */}
                 <Card className="flex">
                   <CardContent className="w-full h-[27rem] py-2 border-none flex gap-5">
-                    <ul ref={availableList} className="w-1/2 h-full border border-strong outline-dotted border-dotted py-1 px-2 flex flex-col gap-2 select-none">
-                    {
-                      availables.map((item) => (
-                        <li key={item} className="text-light bg-zinc-100 w-full p-1 h-fit hover:cursor-grab kanban-item">{item}</li>
-                      ))
-                    }
-                    </ul>
-
-                    <ul ref={selectedList} className="w-1/2 h-full border border-strong outline-dotted border-dotted py-1 px-2 flex flex-col gap-2">
-                    {
-                      selects.map((item) => (
-                        <li key={item} className="text-light bg-zinc-100 w-full p-1 h-fit kanban-item">{item}</li>
-                      ))
-                    }
-                    </ul>
+                    <DragDrop />
                   </CardContent>
                 </Card>
               </TabsContent>

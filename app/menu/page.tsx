@@ -23,6 +23,10 @@ export default function Menu() {
           <LogOut className="w-9 h-9" />
           Sair
         </Link>
+
+        <Link href="/test-drag" className="flex justify-center items-center bg-blue-600 font-bold w-40 h-32 rounded-lg px-5 text-white hover:bg-blue-800">
+          Teste
+        </Link>
       </div>
     </div>
   )
