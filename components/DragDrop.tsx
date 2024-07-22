@@ -1,15 +1,25 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 
-const availableList = ["Id imposto", "Id CNAE", "Tbusuario Orgao Idusuario", "Tbusuario Idfornecedor", "Tbusuario Principal Idorgao Principal"]
-const selectedList = ["Pago", "CNPJ Fornecedor", "Nome Fornecedor", "Data Emissão", "Numero Nota", "Valor Nota", "Aliq Retenção", "Valor Retenção", "Imprimir"]
+interface Position {
+  x: number;
+  y: number;
+}
 
-const DragDrop: React.FC = () => {
+interface DragDropProps {
+  availableList: string[];
+  selectedList: string[];
+}
+
+const DragDrop: React.FC<DragDropProps> = ({ availableList, selectedList }) => {
   const [availableFields, setAvailableFields] = useState(availableList);
   const [selectedFields, setSelectedFields] = useState(selectedList);
-  
+  const [cursorPosition, setCursorPosition] = useState<Position>({ x: 0, y: 0 });
+  const [draggedItemInitialPosition, setDraggedItemInitialPosition] = useState<Position | null>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
@@ -28,9 +38,46 @@ const DragDrop: React.FC = () => {
     else setSelectedFields([...destinationItems]);
   };
 
+  const onDragStart = (start: { source: { index: number } }) => {
+    setIsDragging(true);
+
+    // Captura a posição inicial do item arrastado
+    const draggedItem = document.getElementById(start.source.index.toString());
+    if (draggedItem) {
+      const rect = draggedItem.getBoundingClientRect();
+      setDraggedItemInitialPosition({
+        x: rect.left,
+        y: rect.top,
+      });
+    }
+  };
+
+   useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      // console.log("x: ", event.clientX, "y: ", event.clientY);
+    
+
+      setCursorPosition({
+        x: event.clientX,
+        y: event.clientY < 250 ? event.clientY + 200 : event.clientY,
+      });
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      console.log(`Mouse clicked at position: (${event.clientX}, ${event.clientY})`);
+    };
+
+    // window.addEventListener('click', handleClick);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex">
+    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
+      <div className="flex gap-4">
 
         <div className="flex flex-col w-1/2">
           <h2 className="text-strong font-bold mb-2">Campos disponíveis</h2>
@@ -50,11 +97,13 @@ const DragDrop: React.FC = () => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         className={`p-2 mb-2 bg-white border border-gray-300 rounded-lg shadow-sm ${
-                          snapshot.isDragging ? 'z-50' : ''
+                          snapshot.isDragging ? 'z-0' : ''
                         }`}
                         style={{
                           ...provided.draggableProps.style,
-                          position: snapshot.isDragging ? 'fixed' : 'relative',
+                          position: snapshot.isDragging ? 'absolute' : 'relative',
+                          top: snapshot.isDragging ? `${(cursorPosition.y)-100}px` : 'auto',
+                          left: snapshot.isDragging ? `${80}px` : 'auto',
                         }}
                       >
                         {item}
@@ -76,7 +125,7 @@ const DragDrop: React.FC = () => {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="w-full h-full p-4 pt-1 bg-gray-100 border border-gray-300 rounded-lg overflow-y-scroll relative"
+                className="w-full h-full p-4 pt-1 bg-gray-100 border border-gray-300 rounded-lg overflow-y-scroll"
               >
                 {selectedFields.map((item, index) => (
                   <Draggable key={item} draggableId={item} index={index}>
@@ -86,12 +135,13 @@ const DragDrop: React.FC = () => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         className={`p-2 mb-2 bg-white border border-gray-300 rounded-lg shadow-sm ${
-                          snapshot.isDragging ? 'z-0 fixed' : ''
+                          snapshot.isDragging ? 'z-0' : ''
                         }`}
                         style={{
+                          ...provided.draggableProps.style,
                           position: snapshot.isDragging ? 'fixed' : 'relative',
-                          top: snapshot.isDragging ? '0' : 'auto',
-                          left: snapshot.isDragging ? '0' : 'auto',
+                          top: snapshot.isDragging ? `${(cursorPosition.y)-100}px` : 'auto',
+                          left: snapshot.isDragging ? `${(cursorPosition.x)-(cursorPosition.x)+250}px` : 'auto',
                         }}
                       >
                         {item}
