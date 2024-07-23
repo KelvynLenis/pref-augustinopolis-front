@@ -12,8 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { twMerge } from "tailwind-merge";
-import DragDrop from "./DragDrop";
-import PdfCardContent from "./PdfCardContent";
+import { DragDrop } from "./DragDrop";
+import { PdfCardContent } from "./PdfCardContent";
+import { CardContentPrint } from "./CardContentPrint";
+import Link from "next/link";
 
 const availableList = ["Id imposto", "Id CNAE", "Tbusuario Orgao Idusuario", "Tbusuario Idfornecedor", "Tbusuario Principal Idorgao Principal"]
 const selectedList = ["Pago", "CNPJ Fornecedor", "Nome Fornecedor", "Data Emissão", "Numero Nota", "Valor Nota", "Aliq Retenção", "Valor Retenção", "Imprimir"]
@@ -149,24 +151,16 @@ export function ConfigButtons() {
                 <TabsTrigger value="configuration" onClick={() => setActiveTab("configuration")} className={twMerge("px-2", activeTab === 'configuration' ? 'text-strong bg-zinc-100' : 'bg-tab text-light')}>
                   Configurações de Exportação
                 </TabsTrigger>
-                <TabsTrigger value="columns" onClick={() => setActiveTab("columns")} className={twMerge("px-2", activeTab === 'columns' ? 'text-strong bg-zinc-100' : 'bg-tab text-light')}>Selecionar colunas</TabsTrigger>
+                <TabsTrigger value="columns" onClick={() => setActiveTab("columns")} className={twMerge("px-2", activeTab === 'columns' ? 'text-strong bg-zinc-100' : 'bg-tab text-light')}>
+                  Selecionar colunas
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="configuration">
 
                 <Card>
                   <CardContent className="flex gap-10 pt-10">
-                    <Label>Tipo cor</Label>
-                    <RadioGroup defaultValue="black-white">
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="black-white" id="black-white" className="text-blue-500 pt-[0.3px] pl-[0.3px] border-blue-500" />
-                        <Label htmlFor="black-white">Preto e branco</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem  value="colorful" id="colorful" className="text-blue-500 pt-[0.3px] pl-[0.3] border-blue-500 "  />
-                        <Label htmlFor="colorful">Colorido</Label>
-                      </div>
-                    </RadioGroup>
+                    <CardContentPrint />
                   </CardContent>
                 </Card>
 
@@ -195,10 +189,10 @@ export function ConfigButtons() {
           </DialogContent>
         </Dialog>
 
-        <Button className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:text-white hover:bg-header-purple">
+        <Link href='/menu' className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:text-white hover:bg-header-purple">
           <ArrowLeft className="h-6 w-6" />
           Voltar
-        </Button>
+        </Link>
       </div>
     </>
   );

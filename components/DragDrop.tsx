@@ -13,7 +13,7 @@ interface DragDropProps {
   selectedList: string[];
 }
 
-const DragDrop: React.FC<DragDropProps> = ({ availableList, selectedList }) => {
+export const DragDrop: React.FC<DragDropProps> = ({ availableList, selectedList }) => {
   const [availableFields, setAvailableFields] = useState(availableList);
   const [selectedFields, setSelectedFields] = useState(selectedList);
   const [cursorPosition, setCursorPosition] = useState<Position>({ x: 0, y: 0 });
@@ -158,5 +158,3 @@ const DragDrop: React.FC<DragDropProps> = ({ availableList, selectedList }) => {
     </DragDropContext>
   );
 };
-
-export default DragDrop;

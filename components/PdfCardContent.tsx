@@ -22,7 +22,7 @@ const items = [
   }
 ] as const
 
-export default function PdfCardContent() {
+export function PdfCardContent() {
   return (
     <div className="flex gap-2 text-xs text-light pt-10">
       <div className="flex flex-col gap-8 pt-2">
