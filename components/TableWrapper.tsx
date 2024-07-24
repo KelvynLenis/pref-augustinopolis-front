@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { Ban, Check, Paintbrush, PenSquare, Plus, Search, Triangle } from "lucide-react";
+import { Ban, Check, Paintbrush, PenSquare, Plus, Search, Triangle, X } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,17 +11,6 @@ import {
   TableRow,
 } from "./ui/table"
 import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command"
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -30,9 +19,37 @@ import PrinterLogo from '../assets/icons/printer.svg'
 import Image from "next/image";
 import { ConfigButtons } from "./ConfigButtons";
 import { useState } from "react";
+import { Autocomplete } from "./Autocomplete";
+import { DataTable } from "@/app/relatorios/data-table";
+import { columns } from "@/app/relatorios/columns";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export function TableWrapper() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const data = [{
+    id: "1",
+    pago: "Não",
+    CNPJFornecedor: "01784198000295",
+    nomeFornecedor: "POSTO AUGUSTINOPOLIS LTDA",
+    dataEmissão: "07/03/2024",
+    numeroNota: "6155",
+    valorNota: "R$15.799,98",
+    aliqRetenção: "0,24",
+    valorRetenção: "37,92",
+  },
+  {
+    id: "2",
+    pago: "Sim",
+    CNPJFornecedor: "01784198000295",
+    nomeFornecedor: "POSTO AUGUSTINOPOLIS LTDA",
+    dataEmissão: "07/03/2024",
+    numeroNota: "6156",
+    valorNota: "R$10.799,98",
+    aliqRetenção: "0,34",
+    valorRetenção: "37,92",
+  }
+]
 
   return (
     <>
@@ -45,25 +62,30 @@ export function TableWrapper() {
 
               <Popover>
                 <PopoverTrigger className="absolute right-10 self-center">
-                  <Triangle className="h-4 w-4 rotate-180 fill-black" />
+                  <Triangle className="h-3 w-4 rotate-180 fill-black" />
                 </PopoverTrigger>
                 <PopoverContent className="bg-white">
-                  <div className="p-2">
-                    <span className="text-strong font-bold">Colunas</span>
-                      <input type="text" />
-                    <select className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                      <option value="option3">Option 3</option>
-                    </select>
-
+                  <div className="py-2 gap-1 flex flex-col">
+                    <span className="text-light font-semibold text-sm">Colunas</span>
+                      <Autocomplete />
+                  </div>
+                  
+                  <div className="flex gap-2 w-full justify-end">
+                    <Button className="h-6 text-xs bg-emerald-400 text-white drop-shadow-lg shadow-emerald-300 hover:bg-emerald-500">
+                      <Check className="h-4 w-4 mr-1" />
+                      Aplicar
+                    </Button>
+                    <Button className="h-6 text-xs bg-red-400 text-white drop-shadow-lg shadow-red-300 hover:bg-red-500">
+                      <X className="h-4 w-4 mr-1" />
+                      Cancelar
+                    </Button>
                   </div>
                 </PopoverContent>
               </Popover>
-              <Search className="h-6 w-6 absolute right-1 self-center rotate-90" />
+              <Search className="h-6 w-6 absolute right-1 self-center rotate-90 text-zinc-400" />
             </div>
 
-            <Button onClick={() => setIsFilterOpen(!isFilterOpen)} aria-checked={isFilterOpen} className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-44 gap-4 hover:bg- slate-200 aria-checked:bg-header-purple aria-checked:hover:opacity-90 aria-checked:text-white transition-colors ease-linear">
+            <Button onClick={() => setIsFilterOpen(!isFilterOpen)} aria-checked={isFilterOpen} className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-44 gap-4 hover:bg- slate-200 aria-checked:bg-header-purple aria-checked:hover:opacity-90 aria-checked:text-white transition-colors ease-linear hover:bg-header-purple hover:text-white">
               <Search className="h-6 w-6" />
               <span>
                 Filtro dinâmico
@@ -75,7 +97,7 @@ export function TableWrapper() {
         </div>
         {
           isFilterOpen &&
-          <div className="bg-zinc-200 flex h-24 w-[95%] self-center gap-4 transition-all ease-out">
+          <div className="bg-zinc-100 flex h-24 w-[95%] self-center gap-4 transition-all ease-out">
             <span className="w-0.5 h-full bg-header-purple" />
             <div className="flex flex-col py-4 gap-2">
               <span className="text-light text-lg font-bold">Filtro dinamico</span>
@@ -104,44 +126,7 @@ export function TableWrapper() {
 
       {/* table */}
       <div className="px-10">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-zinc-200">
-              <TableHead className="w-[100px]"></TableHead>
-              <TableHead className="text-right">Page</TableHead>
-              <TableHead className="text-right">CNPJ Fornecedor</TableHead>
-              <TableHead className="text-right">Nome Fornecedor</TableHead>
-              <TableHead className="text-right">Data Emissão</TableHead>
-              <TableHead className="text-right">Número nota</TableHead>
-              <TableHead className="text-right">Valor nota</TableHead>
-              <TableHead className="text-right">Aliq Retenção</TableHead>
-              <TableHead className="text-right">Valor Retenção</TableHead>
-              <TableHead className="text-right">Imprimir</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow className="hover:bg-zinc-200">
-              <TableCell className="font-medium">
-                <Button>
-                  <PenSquare className="w-6 h-6 hover:text-zinc-500" />
-                </Button>
-              </TableCell>
-              <TableCell className="text-right text-red-500 font-semibold">Não</TableCell>
-              <TableCell className="text-right">01784198000295</TableCell>
-              <TableCell className="text-right">POSTO AUGUSTINOPOLIS LTDA</TableCell>
-              <TableCell className="text-right">07/03/2024</TableCell>
-              <TableCell className="text-right">6155</TableCell>
-              <TableCell className="text-right">R$15.799,98</TableCell>
-              <TableCell className="text-right">0,24</TableCell>
-              <TableCell className="text-right">37,92</TableCell>
-              <TableCell className="text-right">
-                <Button className="self-end text-left">
-                  <Image src={PrinterLogo} alt="simbolo de impressora" className="w-10 h-10" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <DataTable columns={columns as ColumnDef<{ id: string; pago: string; CNPJFornecedor: string; nomeFornecedor: string; dataEmissão: string; numeroNota: string; valorNota: string; aliqRetenção: string; valorRetenção: string; }, unknown>[]} data={data} />
       </div>
     </>
   );

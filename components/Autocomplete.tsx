@@ -3,11 +3,15 @@
 import React, { useState } from 'react';
 
 const options = [
-  "Option 1",
-  "Option 2",
-  "Option 3",
-  "Option 4",
-  "Option 5"
+  "Pago",
+  "CNPJ Fornecedor",
+  "Nome Fornecedor",
+  "Data Emissão",
+  "Número nota",
+  "Valor nota",
+  "Aliq Retenção",
+  "Valor Retenção",
+  "Imprimir",
 ];
 
 export const Autocomplete: React.FC = () => {
@@ -34,8 +38,8 @@ export const Autocomplete: React.FC = () => {
         type="text"
         value={inputValue}
         onChange={handleChange}
-        className="w-full px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-        placeholder="Type to search..."
+        className="w-full px-2 text-sm py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-0 focus:ring-blue-200"
+        placeholder="Todos os campos"
       />
       {filteredOptions.length > 0 && (
         <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto mt-1">

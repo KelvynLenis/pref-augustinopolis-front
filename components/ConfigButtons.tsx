@@ -123,7 +123,9 @@ export function ConfigButtons() {
                   </CardContent>
                 </Card>
               </TabsContent>
+
             </Tabs>
+
             <DialogTrigger className="flex gap-3 w-full justify-end">
               <Button className="h-6 bg-emerald-400 text-white drop-shadow-lg shadow-emerald-300 hover:bg-emerald-500">
                 <Check className="h-6 w-6" />
@@ -189,7 +191,7 @@ export function ConfigButtons() {
           </DialogContent>
         </Dialog>
 
-        <Link href='/menu' className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex w-32 gap-4 hover:text-white hover:bg-header-purple">
+        <Link href='/menu' className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex items-center justify-center w-32 gap-4 hover:text-white hover:bg-header-purple">
           <ArrowLeft className="h-6 w-6" />
           Voltar
         </Link>
