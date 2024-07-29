@@ -1,55 +1,78 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { Ban, Check, Paintbrush, PenSquare, Plus, Search, Triangle, X } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table"
+import { useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import PrinterLogo from '../assets/icons/printer.svg'
-import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button";
+import { Ban, Check, Paintbrush, Plus, Search, Triangle, X, Calendar as CalendarIcon } from "lucide-react";
+
+import type { ColumnDef } from "@tanstack/react-table";
+
 import { ConfigButtons } from "./ConfigButtons";
-import { useState } from "react";
 import { Autocomplete } from "./Autocomplete";
 import { DataTable } from "@/app/relatorios/data-table";
 import { columns } from "@/app/relatorios/columns";
-import type { ColumnDef } from "@tanstack/react-table";
+
+import { Option, options } from "./DynamicFilterOptions";
 
 export function TableWrapper() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [fieldsAdded, setFieldsAdded] = useState<Option[]>([])
 
-  const data = [{
-    id: "1",
-    pago: "Não",
-    CNPJFornecedor: "01784198000295",
-    nomeFornecedor: "POSTO AUGUSTINOPOLIS LTDA",
-    dataEmissão: "07/03/2024",
-    numeroNota: "6155",
-    valorNota: "R$15.799,98",
-    aliqRetenção: "0,24",
-    valorRetenção: "37,92",
-  },
-  {
-    id: "2",
-    pago: "Sim",
-    CNPJFornecedor: "01784198000295",
-    nomeFornecedor: "POSTO AUGUSTINOPOLIS LTDA",
-    dataEmissão: "07/03/2024",
-    numeroNota: "6156",
-    valorNota: "R$10.799,98",
-    aliqRetenção: "0,34",
-    valorRetenção: "37,92",
+  const data = [
+    {
+      "id": "1",
+      "pago": "Não",
+      "CNPJFornecedor": "01784198000295",
+      "nomeFornecedor": "POSTO AUGUSTINOPOLIS LTDA",
+      "dataEmissão": "07/03/2024",
+      "numeroNota": "6155",
+      "valorNota": "R$15.799,98",
+      "aliqRetenção": "0,24",
+      "valorRetenção": "37,92",
+    },
+    {
+      "id": "2",
+      "pago": "Sim",
+      "CNPJFornecedor": "01784198000295",
+      "nomeFornecedor": "POSTO AUGUSTINOPOLIS LTDA",
+      "dataEmissão": "07/03/2024",
+      "numeroNota": "6156",
+      "valorNota": "R$10.799,98",
+      "aliqRetenção": "0,34",
+      "valorRetenção": "37,92",
+    }
+  ]
+
+  function handleAddField(e: Option) {
+    if (fieldsAdded.find((field) => field.accessoryKey === e.accessoryKey)) {
+      return;
+    }
+
+    setFieldsAdded([...fieldsAdded, e])
   }
-]
+
+  function handleRemoveField(accessoryKey: string) {
+    setFieldsAdded(fieldsAdded.filter((field) => field.accessoryKey !== accessoryKey))
+  }
+
+  function handleClear() {
+    setFieldsAdded([])
+  }
+
+  function handleCancel() {
+    setFieldsAdded([])
+    setIsFilterOpen(false)
+  }
 
   return (
     <>
@@ -97,24 +120,56 @@ export function TableWrapper() {
         </div>
         {
           isFilterOpen &&
-          <div className="bg-zinc-100 flex h-24 w-[95%] self-center gap-4 transition-all ease-out">
+          <div className="bg-zinc-100 flex min-h-24 h-fit w-[95%] self-center gap-4 transition-all ease-out">
             <span className="w-0.5 h-full bg-header-purple" />
             <div className="flex flex-col py-4 gap-2">
               <span className="text-light text-lg font-bold">Filtro dinamico</span>
+              {
+                fieldsAdded.map((field) => {
+                  return (
+                    <>
+                      <span className="text-zinc-400 text-sm">{field.accessoryKey}</span>
+                      <div key={field.accessoryKey} className="flex gap-1 items-center ml-4">
+                        {
+                          (field.component as () => React.ReactNode)()
+                        }
+                        <Button className="text-zinc-500 drop-shadow-lg hover:text-zinc-300 p-0" onClick={() => handleRemoveField(field.accessoryKey)}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </>
+                  )
+                })
+              }
               <div className="flex gap-6">
-                <Button className="h-8 bg-emerald-400 text-white drop-shadow-lg shadow-emerald-500 hover:bg-emerald-500 flex gap-2">
-                  <Plus className="w-6 h-6" />
-                  Adicionar campos
-                </Button>
-                <Button disabled className="h-8 bg-white text-light drop-shadow-lg hover:opacity-70 flex gap-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button className="h-8 bg-emerald-400 text-white drop-shadow-lg shadow-emerald-500 hover:bg-emerald-500 flex gap-2" >
+                      <Plus className="w-6 h-6" />
+                      Adicionar campos
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-white w-full">
+                    {
+                      options.map((option) => {
+                        return (
+                          <DropdownMenuItem key={option.accessoryKey} onClick={() => handleAddField(option)}>
+                            {option.accessoryKey}
+                          </DropdownMenuItem>
+                        )
+                      })
+                    }
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button onClick={handleClear} disabled={fieldsAdded.length === 0} className="h-8 bg-white text-light drop-shadow-lg hover:bg-header-purple hover:text-white flex gap-2">
                   <Paintbrush className="w-6 h-6" />
                   Limpar
                 </Button>
-                <Button disabled className="h-8 bg-emerald-400 text-white drop-shadow-lg shadow-emerald-500 hover:bg-emerald-500 flex gap-2">
+                <Button disabled={fieldsAdded.length === 0} className="h-8 bg-emerald-400 text-white drop-shadow-lg shadow-emerald-500 hover:bg-emerald-500 flex gap-2">
                   <Check className="w-6 h-6" />
                   Aplicar
                 </Button>
-                <Button className="h-8 bg-red-400 text-white drop-shadow-lg shadow-red-500 hover:bg-red-500 flex gap-2">
+                <Button onClick={handleCancel} className="h-8 bg-red-400 text-white drop-shadow-lg shadow-red-500 hover:bg-red-500 flex gap-2">
                   <Ban className="w-6 h-6" />
                   Sair
                 </Button>

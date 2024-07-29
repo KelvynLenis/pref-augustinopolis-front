@@ -23,6 +23,7 @@ import { ArrowLeft, ArrowRight, PenSquare, SkipBack, SkipForward } from "lucide-
 import PrinterLogo from '../../assets/icons/printer.svg'
 import Image from "next/image"
 import { useState } from "react"
+import Link from "next/link"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,6 +44,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       sorting,
     },
   })
+
+  function test(row: any) {
+    console.log(row)
+  }
 
   return (
     <div className="rounded-md border">
@@ -77,9 +82,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 className="hover:bg-zinc-100"
               >
                 <TableCell className="font-medium p-0">
-                  <Button>
-                    <PenSquare className="w-6 h-6 hover:text-zinc-500" />
-                  </Button>
+                  <Link href={`/relatory/edit/${row.getAllCells()[0].row.original.id}`}>
+                    <Button>
+                      <PenSquare className="w-6 h-6 hover:text-zinc-500" />
+                    </Button>
+                  </Link>
                 </TableCell>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell 

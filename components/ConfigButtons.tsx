@@ -191,7 +191,7 @@ export function ConfigButtons() {
           </DialogContent>
         </Dialog>
 
-        <Link href='/menu' className="drop-shadow-md bg-slate-100 ring-1 ring-slate-200 flex items-center justify-center w-32 gap-4 hover:text-white hover:bg-header-purple">
+        <Link href='/menu' className="drop-shadow-md rounded-md bg-slate-100 ring-1 ring-slate-200 flex items-center justify-center w-32 gap-4 hover:text-white hover:bg-header-purple">
           <ArrowLeft className="h-6 w-6" />
           Voltar
         </Link>

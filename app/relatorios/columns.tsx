@@ -6,7 +6,6 @@ import { z } from "zod"
 import { ArrowUpDown } from "lucide-react";
 
 const PaymentSchema = z.object({
-
   id: z.string(),
   pago: z.enum(["Sim", "Não"]),
   CNPJFornecedor: z.string(),
