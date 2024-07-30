@@ -1,6 +1,6 @@
-import { RelatoryForm } from "@/components/RelatoryForm";
+import { NewTributeForm } from "@/components/NewTributeForm";
 
-export default function page({ params }: { params: { id: string } }) {
+export default function page() {
   return (
     <div className="h-full min-h-screen px-5 py-5 text-header gap-5 flex flex-col bg-zinc-100">
       <header className=" bg-header-purple py-5 px-4 rounded-sm text-white text-xs w-full flex justify-between">
@@ -8,9 +8,7 @@ export default function page({ params }: { params: { id: string } }) {
         <span>Usuário: augustinopolis</span>
       </header>
 
-      <RelatoryForm />
-
+      <NewTributeForm />
     </div>
   )
 }
-

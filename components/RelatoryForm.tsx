@@ -20,8 +20,8 @@ import {
     AccordionItem,
     AccordionTrigger,
   } from "@/components/ui/accordion"
-import { TriangleRight } from "lucide-react"
-  
+import { ArrowLeft, SaveIcon, Trash2, TriangleRight } from "lucide-react"
+import Link from "next/link"
  
 const formSchema = z.object({
   numeroNota: z.string().min(2).max(50),
@@ -111,7 +111,7 @@ export function RelatoryForm() {
                     name="DataEmissao"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Data Emissão</FormLabel>
+                        <FormLabel>Data Emissão *</FormLabel>
                         <FormControl>
                           <Input placeholder="" {...field} />
                         </FormControl>
@@ -282,7 +282,24 @@ export function RelatoryForm() {
           </AccordionItem>
         </Accordion>
 
-        <Button type="submit">Submit</Button>
+        <span className="text-red-700">* Campos obrigatórios</span>
+
+        <div className="flex w-full items-center justify-center">
+          <Button className="flex bg-zinc-100 mr-2 hover:bg-header-purple hover:text-white drop-shadow-md">
+            <SaveIcon size={16} className="mr-2" />
+            Salvar
+          </Button>
+          <Button className="flex mr-2 bg-red-400 text-white drop-shadow-lg shadow-red-300 hover:bg-red-500">
+            <Trash2 size={16} className="mr-2" />
+            Excluir
+          </Button>
+          <Link href="/relatorios">
+            <Button className="flex bg-zinc-100 mr-2 hover:bg-header-purple hover:text-white drop-shadow-md">
+              <ArrowLeft size={16} className="mr-2" />
+              Voltar
+            </Button>
+          </Link>
+        </div>
       </form>
     </Form> 
   )
