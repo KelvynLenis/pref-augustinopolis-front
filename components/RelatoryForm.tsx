@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,37 +21,49 @@ import {
   } from "@/components/ui/accordion"
 import { ArrowLeft, SaveIcon, Trash2, TriangleRight } from "lucide-react"
 import Link from "next/link"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { natureOfServiceOptions } from "@/utils/NatureOfServiceOptions"
+import { Textarea } from "./ui/textarea"
+import { formatDate } from "@/utils/formatDate"
  
 const formSchema = z.object({
-  numeroNota: z.string().min(2).max(50),
-  DataEmissao: z.string().min(2).max(50),
-  regime: z.string().min(2).max(50),
-  dataPagamento: z.string().min(2).max(50),
-  naturezaServico: z.string().min(2).max(50),
-  valorNota: z.string().min(2).max(50),
-  aliqRetencao: z.string().min(2).max(50),
-  retISS: z.string().min(2).max(50),
-  valorRetencao: z.string().min(2).max(50),
-  liquidoApagar: z.string().min(2).max(50),
-  motivo: z.string().min(2).max(50),
+  numeroNota: z.string().nullish(),
+  DataEmissao: z.date(),
+  regime: z.string().nullish(),
+  dataPagamento: z.date(),
+  naturezaServico: z.string(),
+  valorNota: z.string(),
+  aliqRetencao: z.string(),
+  retISS: z.string(),
+  valorRetencao: z.string(),
+  liquidoApagar: z.string(),
+  motivo: z.string(),
 })
 
 export function RelatoryForm() {
+  const today = new Date();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
       defaultValues: {
         numeroNota: "",
-        DataEmissao: "",
+        DataEmissao: today,
         regime: "",
-        dataPagamento: "",
-        naturezaServico: "",
-        valorNota: "",
-        aliqRetencao: "",
-        retISS: "",
-        valorRetencao: "",
-        liquidoApagar: "",
+        dataPagamento: today,
+        naturezaServico: natureOfServiceOptions[0],
+        valorNota: "R$ 0,00",
+        aliqRetencao: "R$ 0,00",
+        retISS: "R$ 0,00",
+        valorRetencao: "R$ 0,00",
+        liquidoApagar: "R$ 0,00",
         motivo: "",
-    },
+      },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -100,9 +111,9 @@ export function RelatoryForm() {
                       <FormItem>
                         <FormLabel>Numero Nota</FormLabel>
                         <FormControl>
-                          <Input placeholder="" {...field} />
+                          <Input  {...field} value={field.value || ''} onChange={field.onChange} />
                         </FormControl>
-                        <FormMessage />
+                       <FormMessage className="text-xs text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -113,9 +124,9 @@ export function RelatoryForm() {
                       <FormItem>
                         <FormLabel>Data Emissão *</FormLabel>
                         <FormControl>
-                          <Input placeholder="" {...field} />
+                          <Input {...field} type="date" value={formatDate(field.value)} onChange={field.onChange} />
                         </FormControl>
-                        <FormMessage />
+                       <FormMessage className="text-xs text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -123,12 +134,25 @@ export function RelatoryForm() {
                     control={form.control}
                     name="regime"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Regime</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                      <FormItem className="w-full flex flex-col justify-end gap-1">
+                        <FormLabel className="text-zinc-500">Regime</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value || ''}>
+                          <FormControl>
+                            <SelectTrigger className="px-2 bg-zinc-100">
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <FormMessage className="text-xs text-red-400" />
+
+                          <SelectContent className="bg-white p-0">
+                            <SelectItem value="simples-nacional" className="text-light hover:bg-zinc-100">
+                              Simples nacional
+                            </SelectItem>
+                            <SelectItem value="demais" className="text-light hover:bg-zinc-100">
+                              Demais
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -139,9 +163,9 @@ export function RelatoryForm() {
                       <FormItem>
                         <FormLabel>Data pagamento</FormLabel>
                         <FormControl>
-                          <Input placeholder="" {...field} />
+                          <Input {...field} type="date" value={formatDate(field.value)} onChange={field.onChange} />
                         </FormControl>
-                        <FormMessage />
+                       <FormMessage className="text-xs text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -163,12 +187,25 @@ export function RelatoryForm() {
                 control={form.control}
                 name="naturezaServico"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Natureza do serviço</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" {...field} />
-                    </FormControl>
-                    <FormMessage />
+                  <FormItem className="w-full flex flex-col">
+                    <FormLabel className="text-zinc-500">Natureza do serviço</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="px-2 bg-zinc-100">
+                          <SelectValue placeholder={natureOfServiceOptions[0]} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <FormMessage className="text-xs text-red-400" />
+                      <SelectContent className="bg-white p-0 w-[58%] h-96">
+                        {
+                          natureOfServiceOptions.map((option, index) => (
+                            <SelectItem key={index} value={option} className="text-sm w-[99%] text-light text-wrap hover:bg-zinc-100">
+                              {option}
+                            </SelectItem>
+                          ))
+                        }
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />
@@ -193,9 +230,9 @@ export function RelatoryForm() {
                     <FormItem>
                       <FormLabel>Valor nota</FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input {...field} value={field.value} onChange={field.onChange} />
                       </FormControl>
-                      <FormMessage />
+                     <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -206,9 +243,9 @@ export function RelatoryForm() {
                     <FormItem>
                       <FormLabel>Aliq retenção</FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input {...field} value={field.value} onChange={field.onChange} />
                       </FormControl>
-                      <FormMessage />
+                     <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -219,9 +256,9 @@ export function RelatoryForm() {
                     <FormItem>
                       <FormLabel>Ret ISS</FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input {...field} value={field.value} onChange={field.onChange} />
                       </FormControl>
-                      <FormMessage />
+                     <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -232,9 +269,9 @@ export function RelatoryForm() {
                     <FormItem>
                       <FormLabel>Valor retenção</FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input {...field} value={field.value} onChange={field.onChange} />
                       </FormControl>
-                      <FormMessage />
+                     <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -245,9 +282,9 @@ export function RelatoryForm() {
                     <FormItem>
                       <FormLabel>Liquido a pagar</FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input {...field} value={field.value} onChange={field.onChange} />
                       </FormControl>
-                      <FormMessage />
+                     <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -269,12 +306,16 @@ export function RelatoryForm() {
                 control={form.control}
                 name="motivo"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Motivo</FormLabel>
+                  <FormItem className="w-full">
+                    <FormLabel className="text-zinc-500">Motivo</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Textarea
+                        className="resize-none bg-zinc-100"
+                        {...field}
+                        value={field.value || ''}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs text-red-400" />
                   </FormItem>
                 )}
               />
@@ -285,7 +326,7 @@ export function RelatoryForm() {
         <span className="text-red-700">* Campos obrigatórios</span>
 
         <div className="flex w-full items-center justify-center">
-          <Button className="flex bg-zinc-100 mr-2 hover:bg-header-purple hover:text-white drop-shadow-md">
+          <Button type="submit" className="flex bg-zinc-100 mr-2 hover:bg-header-purple hover:text-white drop-shadow-md">
             <SaveIcon size={16} className="mr-2" />
             Salvar
           </Button>
