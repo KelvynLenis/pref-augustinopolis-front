@@ -25,31 +25,13 @@ import { Plus } from "lucide-react"
 import { natureOfServiceOptions } from "@/utils/NatureOfServiceOptions"
 import { Textarea } from "./ui/textarea"
 import { formatDate } from "@/utils/formatDate"
-
-const formSchema = z.object({
-    nomeOrgao: z.string(),
-    nomeOrgaoPagador: z.string(),
-    dataCadastro: z.date(),
-    cnpjFornecedor: z.string(),
-    nomeFornecedor: z.string(),
-    numeroNota: z.string(),
-    serieNota: z.string(),
-    dataEmissao: z.date(),
-    regime: z.string(),
-    naturezaServico: z.string(),
-    valorNota: z.string(),
-    aliqRetencao: z.string(),
-    retISS: z.string(),
-    retIRRF: z.string(),
-    liquidoApagar: z.string(),
-    parecer: z.string().nullable(),
-  })
+import { CreateFormSchema } from "@/utils/schemas"
 
 export function NewTributeForm() {
   const today = new Date();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof CreateFormSchema>>({
+    resolver: zodResolver(CreateFormSchema),
       defaultValues: {
         nomeOrgao: "FUNDO MUNICIPAL DE MEIO AMBIENTE",
         nomeOrgaoPagador: "",
@@ -70,7 +52,7 @@ export function NewTributeForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof CreateFormSchema>) {
     console.log(values)
   }
 

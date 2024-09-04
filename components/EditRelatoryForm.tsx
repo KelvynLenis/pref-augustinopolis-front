@@ -31,29 +31,16 @@ import {
 import { natureOfServiceOptions } from "@/utils/NatureOfServiceOptions"
 import { Textarea } from "./ui/textarea"
 import { formatDate } from "@/utils/formatDate"
+import { EditFormSchema } from "@/utils/schemas"
  
-const formSchema = z.object({
-  numeroNota: z.string().nullish(),
-  DataEmissao: z.date(),
-  regime: z.string().nullish(),
-  dataPagamento: z.date(),
-  naturezaServico: z.string(),
-  valorNota: z.string(),
-  aliqRetencao: z.string(),
-  retISS: z.string(),
-  valorRetencao: z.string(),
-  liquidoApagar: z.string(),
-  motivo: z.string(),
-})
-
-export function RelatoryForm() {
+export function EditRelatoryForm() {
   const today = new Date();
   
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof EditFormSchema>>({
+    resolver: zodResolver(EditFormSchema),
       defaultValues: {
         numeroNota: "",
-        DataEmissao: today,
+        dataEmissao: today,
         regime: "",
         dataPagamento: today,
         naturezaServico: natureOfServiceOptions[0],
@@ -66,7 +53,7 @@ export function RelatoryForm() {
       },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof EditFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
@@ -119,7 +106,7 @@ export function RelatoryForm() {
                   />
                   <FormField
                     control={form.control}
-                    name="DataEmissao"
+                    name="dataEmissao"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Data Emissão *</FormLabel>

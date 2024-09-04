@@ -1,4 +1,4 @@
-import { RelatoryForm } from "@/components/RelatoryForm";
+import { EditRelatoryForm } from "@/components/EditRelatoryForm";
 
 export default function page({ params }: { params: { id: string } }) {
   return (
@@ -8,7 +8,7 @@ export default function page({ params }: { params: { id: string } }) {
         <span>Usuário: augustinopolis</span>
       </header>
 
-      <RelatoryForm />
+      <EditRelatoryForm />
 
     </div>
   )

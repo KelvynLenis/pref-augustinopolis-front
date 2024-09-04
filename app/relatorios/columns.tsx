@@ -4,23 +4,12 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table"
 import { z } from "zod"
 import { ArrowUpDown } from "lucide-react";
-
-const PaymentSchema = z.object({
-  id: z.string(),
-  pago: z.enum(["Sim", "Não"]),
-  CNPJFornecedor: z.string(),
-  nomeFornecedor: z.string(),
-  dataEmissão: z.string(),
-  numeroNota: z.string(),
-  valorNota: z.string(),
-  aliqRetenção: z.string(),
-  valorRetenção: z.string(),
-});
+import { ColumnSchema } from "@/utils/schemas";
 
 // Define the TypeScript type using the Zod schema
-type Payment = z.infer<typeof PaymentSchema>;
+type Column = z.infer<typeof ColumnSchema>;
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Column>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
